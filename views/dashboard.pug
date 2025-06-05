@@ -1,0 +1,47 @@
+extends partials/layout
+
+block content
+  section.section(style="padding-top: 1.5rem; padding-bottom: 3rem;")
+    .container.is-fluid
+      a.button.is-primary.mb-3.is-hidden-desktop#dashboardMenuToggle(aria-label="menu" aria-expanded="false")
+        span.icon
+          i.fas.fa-bars
+        span Menu
+
+      .columns.is-variable.is-3-tablet.is-2-desktop
+        .column.is-one-quarter-desktop.is-one-third-tablet#dashboardMenuColumnContainer
+          include ./partials/left-menu
+
+        .column
+          block dashboardContent
+            if path === '/dashboard'
+              .box(style="padding: 2.5rem; border-radius: 8px;")
+                nav.breadcrumb.is-small.mb-5(aria-label="breadcrumbs")
+                  ul
+                    li.is-active: a(href="/dashboard" aria-current="page") Dashboard
+                
+                h1.title.is-3.has-text-primary Your Profile
+                p.subtitle.is-5.has-text-grey Welcome back, #{currentUser.name}!
+
+                hr.my-5
+
+                table.table.is-fullwidth.is-striped.is-hoverable.is-narrow
+                  tbody
+                    tr
+                      th.has-text-weight-semibold(style="width: 120px;") Name:
+                      td #{currentUser.name}
+                    tr
+                      th.has-text-weight-semibold Email:
+                      td #{currentUser.email}
+                    tr
+                      th.has-text-weight-semibold Joined:
+                      td #{new Date(currentUser.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                
+                .has-text-right.mt-5
+                  a.button.is-link.is-outlined(href="/users/edit-profile")
+                    span.icon
+                      i.fas.fa-user-cog
+                    span Edit Profile
+            else if !path || (path !== '/dashboard' && path !== '/posts/my-posts' && path !== '/users/edit-profile' && path !== '/posts/new')
+              .box(style="padding: 2rem; border-radius: 8px;")
+                p.has-text-centered.is-size-5.has-text-grey Please select an option from the menu to continue.

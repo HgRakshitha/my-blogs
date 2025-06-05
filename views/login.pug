@@ -1,0 +1,33 @@
+extends partials/layout
+
+block append head
+  - var title = 'Log In'
+
+block content
+  .columns.is-centered
+    .column.is-half-tablet.is-one-third-desktop
+      h1.title.has-text-centered Log In
+      .box
+        form(method="POST" action="/login")
+          .field
+            label.label(for="email") Email
+            .control.has-icons-left
+              input.input#email(type="email" name="email" placeholder="e.g. alex@example.com" required value=typeof emailValue !== 'undefined' ? emailValue : '')
+              span.icon.is-small.is-left
+                i.fas.fa-envelope
+          .field
+            label.label(for="password") Password
+            .control.has-icons-left
+              input.input#password(type="password" name="password" placeholder="********" required)
+              span.icon.is-small.is-left
+                i.fas.fa-lock
+          .field
+            p.has-text-right
+              a(href="/forgot-password") Forgot Password?
+          
+          .field.mt-5
+            .control
+              button.button.is-primary.is-fullwidth(type="submit") Log In
+        hr
+        p.has-text-centered Don't have an account?
+          a(href="/register")  Register here

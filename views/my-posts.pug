@@ -1,0 +1,59 @@
+extends partials/layout
+
+block content
+  section.section
+    .container.is-fluid
+      .columns
+        .column.is-one-quarter-desktop.is-one-third-tablet
+          include ./partials/left-menu
+
+        .column
+          .box
+            h1.title.is-3 My Posts
+            if posts && posts.length > 0
+              p.subtitle You have created #{posts.length} post#{posts.length > 1 ? 's' : ''}.
+              hr
+              each post in posts
+                article.media.mb-5.pb-5(style="border-bottom: 1px solid #eee;")
+                  if post.imageUrl
+                    figure.media-left
+                      p.image.is-96x96
+                        img(src=post.imageUrl, alt=post.title, style="object-fit: cover; border-radius: 4px;")
+                  else
+                    figure.media-left
+                      p.image.is-96x96
+                        span.icon.is-large.has-text-grey-lighter(style="width: 96px; height: 96px; border: 1px solid #dbdbdb; display:flex; align-items:center; justify-content:center; border-radius: 4px;")
+                          i.far.fa-image.fa-3x
+                  .media-content
+                    .content
+                      h4.title.is-4.mb-1
+                        a(href=`/posts/${post._id}`)= post.title
+                      p.is-size-7.has-text-grey.mb-3
+                        if post.createdAt
+                          | Published: #{new Date(post.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        if post.createdAt && post.updatedAt && (new Date(post.createdAt).toISOString() !== new Date(post.updatedAt).toISOString())
+                          span.mx-1 |
+                          | Updated: #{new Date(post.updatedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      p= post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '')
+                    nav.level.is-mobile
+                      .level-left
+                        a.button.is-small.is-link.is-outlined(href=`/posts/${post._id}`)
+                          span.icon.is-small
+                            i.fas.fa-eye
+                          span View
+                        a.button.is-small.is-info.is-outlined.ml-2(href=`/posts/edit/${post._id}`)
+                          span.icon.is-small
+                            i.fas.fa-edit
+                          span Edit
+                      .level-right
+                        form(action=`/posts/delete/${post._id}?_method=DELETE` method="POST" style="display: inline;")
+                          button.button.is-small.is-danger.is-outlined(type="submit" onclick="return confirm('Are you sure you want to delete this post? This action cannot be undone.');")
+                            span.icon.is-small
+                              i.fas.fa-trash
+                            span Delete
+            else
+              .notification.is-info.is-light.has-text-centered
+                span.icon.is-large.mb-3
+                  i.fas.fa-feather-alt.fa-2x
+                p.title.is-5 You haven't created any posts yet.
+                a.button.is-primary.mt-3(href="/posts/new") Create Your First Post!

@@ -1,0 +1,81 @@
+doctype html
+html(class="has-background-light")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title #{title ? title + ' | ' : ''} My Blog
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+    link(rel="stylesheet", href="/stylesheets/custom.css")
+    block head
+
+  body
+    nav.navbar.is-dark(role="navigation", aria-label="main navigation")
+      .container
+        .navbar-brand
+          a.navbar-item(href="/")
+            strong MyBlog
+          a.navbar-burger(role="button", aria-label="menu", aria-expanded="false", data-target="navbarBasicExample")
+            span(aria-hidden="true")
+            span(aria-hidden="true")
+            span(aria-hidden="true")
+        #navbarBasicExample.navbar-menu
+          .navbar-start
+            a.navbar-item(href="/") Home
+            if currentUser
+              a.navbar-item(href="/dashboard") Dashboard
+              a.navbar-item(href="/posts/new") Create Post
+          .navbar-end
+            .navbar-item
+              .buttons
+                if currentUser
+                  span.navbar-item.has-text-white Welcome, #{currentUser.name}!
+                  a.button.is-light(href="/logout") Log out
+                else
+                  a.button.is-primary(href="/register")
+                    strong Sign up
+                  a.button.is-light(href="/login") Log in
+    
+    main.main-content-area 
+      .container.is-max-widescreen.py-4
+        include ./messages
+
+      block content
+
+    footer.footer.has-background-grey-lighter.py-4
+      .content.has-text-centered
+        p
+          strong My Blog App
+          |  © #{new Date().getFullYear()}
+
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+        if ($navbarBurgers.length > 0) {
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+            });
+          });
+        }
+        
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+          const $notification = $delete.parentNode;
+          $delete.addEventListener('click', () => {
+            $notification.parentNode.removeChild($notification);
+          });
+        });
+
+        const dashboardMenuToggle = document.getElementById('dashboardMenuToggle');
+        const dashboardLeftMenu = document.getElementById('dashboardLeftMenu');
+        
+        if (dashboardMenuToggle && dashboardLeftMenu) {
+          dashboardMenuToggle.addEventListener('click', () => {
+            dashboardMenuToggle.classList.toggle('is-active');
+            dashboardLeftMenu.classList.toggle('is-hidden-touch');
+          });
+        }
+      });

@@ -1,0 +1,90 @@
+extends partials/layout
+
+block append head
+  - var title = 'My Blog - Discover & Share'
+
+block content
+  section.hero.is-link.is-medium.is-bold.has-text-centered(style=`
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('https://img.freepik.com/premium-photo/blogging-concept-web-blog-social-media-information-network-snugly_31965-510760.jpg?semt=ais_hybrid&w=740'); 
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  `)
+    .hero-body
+      .container
+        h1.title.is-1 My Blog
+        h2.subtitle.is-3.has-text-light Discover amazing stories, insights, and perspectives.
+        .buttons.is-centered.mt-5
+          if !currentUser
+            a.button.is-primary.is-large(href="/register")
+              span.icon
+                i.fas.fa-user-plus
+              span Get Started - Sign Up!
+            a.button.is-light.is-large.ml-2(href="/login")
+              span.icon
+                i.fas.fa-sign-in-alt
+              span Login
+          else if posts && posts.length === 0
+            a.button.is-primary.is-large(href="/posts/new")
+              span.icon
+                i.fas.fa-plus-circle
+              span Create the First Post!
+          else
+            a.button.is-primary.is-large(href="/posts/new")
+              span.icon
+                i.fas.fa-pen-nib
+              span Write a New Post
+
+  section.section.py-6 
+    .container
+      if posts && posts.length > 0
+        .has-text-centered.mb-6
+          h3.title.is-2 Latest Posts
+          p.subtitle.is-5 Stay updated with our newest articles.
+          hr.is-divider(data-content="EXPLORE")
+
+        .columns.is-multiline.is-variable.is-3-tablet.is-2-desktop 
+          each post in posts
+            .column.is-one-quarter-desktop.is-one-third-tablet.is-half-mobile
+              .card.is-shadowless.mb-5(style="border: 1px solid #dbdbdb; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; height: 100%;") 
+                if post.imageUrl
+                  .card-image
+                    figure.image.is-5by3
+                      a(href=`/posts/${post._id}`)
+                        img(src=post.imageUrl, alt=post.title + " cover image", style="object-fit: cover; transition: transform 0.3s ease;")
+                .card-content(style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 1rem;")
+                  .content
+                    h5.title.is-5.mb-1
+                      a(href=`/posts/${post._id}` style="color: inherit; text-decoration: none;")= post.title
+                    .media.mb-2
+                      .media-content
+                        p.is-size-7.has-text-grey
+                          strong #{post.author ? post.author.name : 'Unknown Author'}
+                          br
+                          time(datetime=new Date(post.createdAt).toISOString())= new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                    p.is-size-7= post.content.substring(0, 80) + (post.content.length > 80 ? '...' : '') 
+
+                footer.card-footer(style="border-top: 1px solid #dbdbdb;")
+                  a.card-footer-item.is-size-7(href=`/posts/${post._id}`) Read More »
+                  if currentUser && post.author && currentUser._id.equals(post.author._id)
+                    a.card-footer-item.has-text-info.is-size-7(href=`/posts/edit/${post._id}`)
+                      span.icon.is-small
+                        i.fas.fa-edit
+                      span Edit
+      else
+        .columns.is-centered.mt-6
+          .column.is-two-thirds.has-text-centered
+            .box.has-background-light(style="padding: 2rem;")
+              span.icon.is-large.has-text-grey-light.mb-4
+                i.fas.fa-feather-alt.fa-3x
+              h4.title.is-4.has-text-grey No Posts Yet!
+              p.subtitle.is-6.has-text-grey This space is waiting for brilliant ideas.
+              if currentUser
+                a.button.is-primary.is-medium.mt-4(href="/posts/new")
+                  span.icon
+                    i.fas.fa-plus
+                  span Create Your First Post
+              else
+                .buttons.is-centered.mt-4
+                  a.button.is-link.is-medium(href="/login") Login to Contribute
+                  a.button.is-primary.is-outlined.is-medium(href="/register") Sign Up

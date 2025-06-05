@@ -1,0 +1,51 @@
+extends partials/layout
+
+block append head
+  - var title = 'Edit: ' + (post ? post.title.substring(0,50) + (post.title.length > 50 ? "..." : "") : 'Post')
+
+block content
+  section.section
+    .container.is-fluid
+      .columns.is-variable.is-8
+        .column.is-one-quarter-desktop.is-one-third-tablet
+          include ./partials/left-menu
+
+        .column
+          .box(style="padding: 2rem;")
+            h2.title.is-2.has-text-centered.has-text-primary.mb-5 Edit Post: #{post ? post.title.substring(0,30) + (post.title.length > 30 ? "..." : "") : ''}
+            
+            if errors && errors.length > 0
+              each error in errors
+                .notification.is-danger.is-light.mb-3= error.msg 
+            
+            form(method="POST" action=`/posts/edit/${post._id}` novalidate)
+              .field
+                label.label(for="title") Title
+                .control.has-icons-left
+                  input.input#title(type="text" name="title" placeholder="My Awesome Blog Post" required value=post.title)
+                  span.icon.is-left
+                    i.fas.fa-heading
+
+              .field
+                label.label(for="imageUrl") Image URL (Optional)
+                .control.has-icons-left
+                  input.input#imageUrl(type="url" name="imageUrl" placeholder="https://example.com/image.jpg" value=post.imageUrl || '')
+                  span.icon.is-left
+                    i.fas.fa-image
+                if post && post.imageUrl
+                  figure.image.is-128x128.mt-2.is-inline-block
+                    img(src=post.imageUrl, alt="Current Cover Image", style="border-radius: 4px; object-fit: cover;")
+
+              .field
+                label.label(for="content") Content
+                .control
+                  textarea.textarea#content(name="content" placeholder="Start writing your masterpiece here..." rows="8" required)= post.content
+
+              hr.my-4
+
+              .field.mt-5.has-text-centered
+                button.button.is-primary.is-medium(type="submit")
+                  span.icon
+                    i.fas.fa-save
+                  span.ml-2 Save Changes
+                a.button.is-light.is-medium.ml-4(href=(post && post._id ? `/posts/${post._id}` : "/dashboard")) Cancel

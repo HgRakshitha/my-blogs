@@ -1,0 +1,47 @@
+extends partials/layout
+
+block content
+  section.section
+    .container.is-fluid
+      .columns.is-variable.is-8
+        .column.is-one-quarter-desktop.is-one-third-tablet
+          include ./partials/left-menu
+
+        .column
+          
+
+          .box
+            form(method="POST" action="/posts" novalidate)
+              h2.title.is-2.has-text-centered.has-text-primary.mb-6 Create New Post
+              .field
+                label.label(for="title") Title
+                .control.has-icons-left
+                  input.input#title(type="text" name="title" placeholder="My Awesome Blog Post" required value=titleValue || '')
+                  span.icon.is-left
+                    i.fas.fa-heading
+
+             
+              .field
+                label.label(for="imageUrl") Image URL (Optional)
+                .control.has-icons-left
+                  input.input#imageUrl(type="url" name="imageUrl" placeholder="https://example.com/image.jpg" value=imageUrlValue || '')
+                  span.icon.is-left
+                    i.fas.fa-image
+
+              
+              .field
+                label.label(for="content") Content
+                .control
+                  textarea.textarea#content(name="content" placeholder="Start writing your masterpiece here..." rows="8" required)= contentValue || ''
+
+              .field.mt-5.has-text-centered
+                button.button.is-primary.is-medium(type="submit")
+                  span.icon
+                    i.fas.fa-paper-plane
+                  span.ml-2 Create Post
+                a.button.is-light.is-medium.ml-4(href="/dashboard") Cancel
+
+          
+          if errors && errors.length > 0
+            each error in errors
+              .notification.is-danger.is-light.mt-4= error.msg

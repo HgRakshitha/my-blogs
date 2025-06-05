@@ -1,0 +1,39 @@
+//- views/partials/left-menu.pug
+//- This menu will be part of the .columns in dashboard.pug
+//- Its visibility on smaller screens will be controlled by a class toggled by JS (e.g., 'is-active')
+
+.box.has-background-white-ter.py-4.px-4(id="dashboardLeftMenu" class="is-hidden-touch" style="position: sticky; top: 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: calc(100vh - 3rem); overflow-y: auto;")
+  aside.menu
+    p.menu-label.is-size-5.has-text-grey.is-uppercase.has-text-weight-semibold General
+    ul.menu-list
+      li.mb-1
+        a(href="/dashboard" class=(path === '/dashboard' ? 'is-active has-text-link has-background-link-light has-text-weight-semibold' : 'has-text-grey-darker') style="border-radius: 6px; display: flex; align-items: center; padding: 0.75em 1em; font-size: 1.1rem;")
+          span.icon.mr-3
+            i.fas.fa-user-circle.fa-fw
+          span My Profile
+      li.mb-1
+        a(href="/users/edit-profile" class=(path === '/users/edit-profile' ? 'is-active has-text-link has-background-link-light has-text-weight-semibold' : 'has-text-grey-darker') style="border-radius: 6px; display: flex; align-items: center; padding: 0.75em 1em; font-size: 1.1rem;")
+          span.icon.mr-3
+            i.fas.fa-user-edit.fa-fw
+          span Edit Profile
+
+    p.menu-label.is-size-5.has-text-grey.is-uppercase.has-text-weight-semibold.mt-5 Content
+    ul.menu-list
+      li.mb-1
+        a(href="/posts/new" class=(path === '/posts/new' ? 'is-active has-text-link has-background-link-light has-text-weight-semibold' : 'has-text-grey-darker') style="border-radius: 6px; display: flex; align-items: center; padding: 0.75em 1em; font-size: 1.1rem;")
+          span.icon.mr-3
+            i.fas.fa-plus-square.fa-fw
+          span Create New Post
+      li.mb-1
+        a(href="/posts/my-posts" class=(path === '/posts/my-posts' ? 'is-active has-text-link has-background-link-light has-text-weight-semibold' : 'has-text-grey-darker') style="border-radius: 6px; display: flex; align-items: center; padding: 0.75em 1em; font-size: 1.1rem;")
+          span.icon.mr-3
+            i.fas.fa-list-alt.fa-fw
+          span My Posts
+
+    p.menu-label.is-size-5.has-text-grey.is-uppercase.has-text-weight-semibold.mt-5 Account
+    ul.menu-list
+      li.mb-1
+        a(href="/logout" class="has-text-danger-dark has-text-weight-medium" style="border-radius: 6px; display: flex; align-items: center; padding: 0.75em 1em; font-size: 1.1rem;")
+          span.icon.mr-3
+            i.fas.fa-sign-out-alt.fa-fw
+          span Logout

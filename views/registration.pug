@@ -1,0 +1,41 @@
+extends partials/layout
+
+block content
+  .columns.is-centered
+    .column.is-half-tablet.is-one-third-desktop
+      h1.title.has-text-centered Register
+      if errors && errors.length > 0
+        each error in errors
+          .notification.is-danger.is-light= error.msg
+      .box
+        form(method="POST" action="/register")
+          .field
+            label.label(for="name") Name
+            .control.has-icons-left
+              input.input#name(type="text" name="name" placeholder="e.g. Alex Smith" required value=typeof name !== 'undefined' ? name : '')
+              span.icon.is-small.is-left
+                i.fas.fa-user
+          .field
+            label.label(for="email") Email
+            .control.has-icons-left
+              input.input#email(type="email" name="email" placeholder="e.g. alex@example.com" required value=typeof email !== 'undefined' ? email : '')
+              span.icon.is-small.is-left
+                i.fas.fa-envelope
+          .field
+            label.label(for="password") Password
+            .control.has-icons-left
+              input.input#password(type="password" name="password" placeholder="********" required)
+              span.icon.is-small.is-left
+                i.fas.fa-lock
+          .field
+            label.label(for="password2") Confirm Password
+            .control.has-icons-left
+              input.input#password2(type="password" name="password2" placeholder="********" required)
+              span.icon.is-small.is-left
+                i.fas.fa-lock
+          .field.mt-5
+            .control
+              button.button.is-primary.is-fullwidth(type="submit") Register
+        hr
+        p.has-text-centered Already have an account?
+          a(href="/login")  Log in here

@@ -1,0 +1,33 @@
+extends ../partials/layout
+
+//- block append head
+//-   - var title = 'Edit Profile'
+
+block content
+  section.section
+    .container
+      .columns.is-centered
+        .column.is-half
+          h1.title.is-3.has-text-centered Edit Your Profile
+          if errors && errors.length > 0
+            each error in errors
+              .notification.is-danger.is-light= error.msg
+          .box
+            form(method="POST" action="/users/edit-profile")
+              .field
+                label.label(for="name") Name
+                .control.has-icons-left
+                  input.input#name(type="text" name="name" value=currentUser.name required)
+                  span.icon.is-small.is-left
+                    i.fas.fa-user
+              .field
+                label.label(for="email") Email
+                .control.has-icons-left
+                  input.input#email(type="email" name="email" value=currentUser.email required)
+                  span.icon.is-small.is-left
+                    i.fas.fa-envelope
+              .field.is-grouped.is-grouped-centered.mt-5
+                .control
+                  button.button.is-primary(type="submit") Save Changes
+                .control
+                  a.button.is-light(href="/dashboard") Cancel

@@ -1,0 +1,25 @@
+extends partials/layout
+
+block content
+  section.hero.is-danger.is-bold
+    .hero-body
+      .container.has-text-centered
+        if error && error.status === 404
+          h1.title.is-1 404
+          h2.subtitle.is-3 Page Not Found
+          p.is-size-5 The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+        else
+          h1.title.is-1 Oops!
+          h2.subtitle.is-3 An Error Occurred
+          p.is-size-5 #{message || 'Something went wrong on our end.'}
+        a.button.is-light.is-outlined.mt-5(href="/") Go to Homepage
+  
+  if error && process.env.NODE_ENV === 'development' && error.status !== 404
+    section.section
+      .container
+        .box
+          h3.title.is-5 Error Details (Development Mode)
+          p Status: #{error.status || 500}
+          if error.stack
+            pre
+              code= error.stack
