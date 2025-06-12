@@ -3,16 +3,17 @@
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.15); 
 }
 
-.card .card-image img {
-  transition: transform 0.3s ease-in-out !important;
+
+.card .card-image img { 
+  transition: transform 0.3s ease-in-out !important; 
 }
 
-.card .card-image img:hover {
-  transform: scale(1.05);
+.card:hover .card-image img { 
+  transform: scale(1.05) !important; 
 }
 
 body {
@@ -21,10 +22,10 @@ body {
     flex-direction: column;
 }
 
-section.section, .hero {
+section.section, .hero { 
     flex-shrink: 0;
 }
 
-main.section {
+main.section { 
     flex-grow: 1;
 }

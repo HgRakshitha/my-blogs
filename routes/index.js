@@ -328,62 +328,41 @@ router.get('/reset-password/:token', async (req, res) => {
     }
 });
 
-router.post('/reset-password/:token', async (req, res) => {
-    const { token } = req.params;
-    const { password, password2 } = req.body;
-    let errors = [];
+router.get('/search', async (req, res) => {
+    const searchQuery = req.query.query;
+    let posts = [];
+    let errors = []; 
 
-    if (!password || !password2) {
-        errors.push({ msg: 'Please enter all password fields.' });
-    }
-    if (password !== password2) {
-        errors.push({ msg: 'Passwords do not match.' });
-    }
-    if (password.length < 6) {
-        errors.push({ msg: 'Password must be at least 6 characters.' });
-    }
+    if (searchQuery && searchQuery.trim() !== '') {
+        try {
+            posts = await Post.find(
+                { $text: { $search: searchQuery } },
+                { score: { $meta: "textScore" } }
+            )
+            .populate('author', 'name')
+            .sort({ score: { $meta: "textScore" } })
+            .lean();
 
-    if (errors.length > 0) {
-        return res.render('reset-password', {
-            title: 'Reset Password',
-            errors,
-            token: token
-        });
-    }
+            if (posts.length === 0) {
+                errors.push({ msg: `No posts found matching "${searchQuery}".` });
+            }
 
-    try {
-        const user = await User.findOne({
-            passwordResetToken: token,
-            passwordResetTokenExpires: { $gt: Date.now() }
-        });
-
-        if (!user) {
-            req.flash('error_msg', 'Password reset token is invalid or has expired.');
-            return res.redirect('/forgot-password');
+        } catch (err) {
+            console.error("Error during search:", err);
+            errors.push({ msg: 'An error occurred while searching. Please try again.' });
         }
-
-        user.password = password;
-        user.passwordResetToken = undefined;
-        user.passwordResetTokenExpires = undefined;
-        if (!user.isVerified) {
-            user.isVerified = true;
-            user.emailVerificationToken = undefined;
-            user.emailVerificationTokenExpires = undefined;
-        }
-        await user.save();
-
-        req.flash('success_msg', 'Password has been reset successfully. You can now log in with your new password.');
-        res.redirect('/login');
-
-    } catch (err) {
-        console.error("Error resetting password:", err);
-        errors.push({ msg: 'An error occurred while resetting your password. Please try again.' });
-        res.render('reset-password', {
-            title: 'Reset Password',
-            errors,
-            token: token
-        });
+    } else {
+        
     }
+
+    res.render('search-results', {
+        title: searchQuery ? `Search Results for "${searchQuery}"` : 'Search Posts',
+        searchQuery: searchQuery,
+        posts: posts,
+        errors: errors 
+    });
 });
+
+
 
 module.exports = router;

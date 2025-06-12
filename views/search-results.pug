@@ -1,0 +1,55 @@
+extends partials/layout
+
+block append head
+  - var pageTitle = searchQuery ? `Search: "${searchQuery}"` : 'Search Posts'
+  - var title = pageTitle
+
+block content
+  section.section
+    .container
+      .columns.is-centered
+        .column.is-three-quarters-desktop.is-two-thirds-widescreen
+          h1.title.is-2.has-text-centered= pageTitle
+          
+          if errors && errors.length > 0
+            each error in errors
+              .notification.is-warning.is-light= error.msg
+          
+          if posts && posts.length > 0
+            p.subtitle.is-5.has-text-centered Found #{posts.length} post#{posts.length !== 1 ? 's' : ''}.
+            hr.my-5
+
+            each post in posts
+              article.box.mb-5 
+                .media
+                  if post.imageUrl
+                    figure.media-left
+                      p.image.is-128x128 
+                        a(href=`/posts/${post._id}`)
+                          img(src=post.imageUrl, alt=post.title, style="object-fit:cover; border-radius: 4px;")
+                  else
+                    figure.media-left
+                      p.image.is-128x128.has-background-light(style="display:flex; align-items:center; justify-content:center; border-radius: 4px;")
+                        span.icon.is-large.has-text-grey-lighter
+                          i.far.fa-image.fa-3x
+                  .media-content
+                    .content
+                      h3.title.is-4.mb-1
+                        a(href=`/posts/${post._id}`)= post.title
+                      p.is-size-7.has-text-grey.mb-2
+                        | By: #{post.author ? post.author.name : 'Unknown Author'}
+                        span.mx-1 |
+                        time(datetime=new Date(post.createdAt).toISOString())= new Date(post.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                      p!= post.content.substring(0, 250) + (post.content.length > 250 ? '...' : '') 
+                    a.button.is-small.is-link.is-outlined(href=`/posts/${post._id}`) Read More
+          else if !errors 
+            if searchQuery 
+              .notification.is-info.is-light.has-text-centered
+                p.title.is-5 No Results
+                p Try searching with different keywords.
+            else
+              p.has-text-centered Enter a search term in the bar above to find posts.
+              
+          if searchQuery
+            .has-text-centered.mt-5
+              a.button.is-light(href="/") ← Back to Home

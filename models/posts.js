@@ -20,13 +20,10 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     }
-}, { timestamps: true });
-
-postSchema.pre('save', function(next) {
-    if (this.isModified() && !this.isNew) { 
-      this.updatedAt = Date.now();
-    }
-    next();
+}, {
+    timestamps: true
 });
+
+postSchema.index({ title: 'text', content: 'text' });
 
 module.exports = mongoose.models.Post || mongoose.model('Post', postSchema);
